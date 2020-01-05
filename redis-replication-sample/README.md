@@ -1,6 +1,28 @@
-在redis主从复制中：
+# 在redis主从复制
 
-1. `Error condition on socket for SYNC: Connection refused`:
+
+## 配置
+
+1. 复制官方提供的配置文件`redis.conf`，一份作为master，另外一份作为slave。
+
+2. 修改slave的配置，找到replicateof配置，设置对应的master的ip和端口
+```bash
+# 这里是伪集群的配置，master和slave部署在同一台机器上
+replicateof 127.0.0.1 6379
+```
+
+### 查看信息
+
+当master和slave都运行起来后，可以通过如下命令查看主从复制的信息:
+```bash
+redis> info replication
+```
+
+
+## 错误总结
+
+
+### `Error condition on socket for SYNC: Connection refused`:
 因为主master节点在redis.conf中开启了一下配置，所以只允许请求（是通过ip为127.0.0.1的网卡）进来的请求进行连接访问：
 ```bash
 bind 127.0.0.1
