@@ -11,12 +11,26 @@
 replicateof 127.0.0.1 6379
 ```
 
-### 查看信息
+* 查看信息
 
 当master和slave都运行起来后，可以通过如下命令查看主从复制的信息:
 ```bash
 redis> info replication
 ```
+
+* 断开复制
+
+当在slave节点中执行一下命令，slave节点将会重新成为独立的节点（自己也是master）：
+```bash
+redis> slaveof no one
+```
+
+
+## 不足
+
+1. 如果没有sentinel的支撑，默认master挂掉后，其他slave节点不会变成master节点。
+2. slave节点默认为只读，不允许对数据进行修改。
+
 
 
 ## 错误总结
