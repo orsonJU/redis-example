@@ -5,10 +5,10 @@
 
 1. 复制官方提供的配置文件`redis.conf`，一份作为master，另外一份作为slave。
 
-2. 修改slave的配置，找到replicateof配置，设置对应的master的ip和端口
+2. 修改slave的配置，找到replicaof配置，设置对应的master的ip和端口
 ```bash
 # 这里是伪集群的配置，master和slave部署在同一台机器上
-replicateof 127.0.0.1 6379
+replicaof 127.0.0.1 6379
 ```
 
 * 查看信息
