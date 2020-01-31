@@ -1,6 +1,7 @@
 package com.orson.redis.lock;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Transaction;
 import redis.clients.jedis.params.SetParams;
 
 import java.util.Objects;
@@ -89,7 +90,12 @@ public class RedisLock {
 	
 	
 	public void increment() {
-		Jedis jedis = this.localJedis.get();
+		Jedis jedis = localJedis.get();
+		if(jedis == null) {
+			jedis = new Jedis(host, port);
+			// init jedis
+			localJedis.set(jedis);
+		}
 		jedis.incrBy("shared", 1);
 	}
 
@@ -103,12 +109,12 @@ public class RedisLock {
 
 		// 检查锁是否存在
 		String field = LOCK_PREFIX + this.name;
-		String exists = this.localJedis.get().get(field);
+		String exists = jedis.get(field);
 		if(!uuid.equals(exists)) {
 			throw new RuntimeException("no lock is exists... uuid: " + uuid + ", exists: " + exists);
 		}
-		
-		this.localJedis.get().del(field);
+
+		jedis.del(field);
 	}
 
 }

@@ -20,10 +20,11 @@ public class LockController {
 //		CountDownLatch latch = new CountDownLatch(1);
 
 		long start = System.currentTimeMillis();
-		CyclicBarrier barrier = new CyclicBarrier(10);
+		CyclicBarrier barrier = new CyclicBarrier(3);
 		RedisLock lock = new RedisLock("orson", "localhost", 6379);
 
-		for(int i = 1; i <= 10; i++) {
+		// idea 根据 System.getRuntime().availableProcessor()获取的核心CPU数为4，所以控制线程在4个可以获得更高的响应速度
+		for(int i = 1; i <= 3; i++) {
 
 			new Thread(new Runnable() {
 				
@@ -53,4 +54,9 @@ public class LockController {
 		
 		return String.valueOf(end - start);
 	}
+
+//	public static void main(String[] args) {
+//		int i = Runtime.getRuntime().availableProcessors();
+//		System.out.println(i);
+//	}
 }
