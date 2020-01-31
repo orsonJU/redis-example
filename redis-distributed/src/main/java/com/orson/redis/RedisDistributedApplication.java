@@ -14,13 +14,4 @@ public class RedisDistributedApplication {
 		SpringApplication.run(RedisDistributedApplication.class, args);
 	}
 
-//	@Bean
-	public JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig jedisPoolConfig)  {
-		RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-		config.setHostName("localhost");
-		config.setPort(6379);
-		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(config);
-		return jedisConnectionFactory;
-	}
-
 }

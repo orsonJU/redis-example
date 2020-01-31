@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +26,7 @@ class RedisLockTest {
 
 		CountDownLatch latch = new CountDownLatch(10);
 
-		RedisLockv2 lock = new RedisLockv2("orson", "localhost", 6379);
+		RedisLock lock = new RedisLock("orson", "localhost", 6379);
 		
 		for(int i = 1; i <= 10; i++) {
 			
@@ -46,7 +47,7 @@ class RedisLockTest {
 						}
 					}
 				}
-			}, "task-" + i).start();
+			}, "task-" + UUID.randomUUID().toString()).start();
 		}
 
 

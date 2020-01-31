@@ -75,6 +75,7 @@ public class RedisLock {
 		
 		for(;;) {
 			// 尝试执行 set redis_lock:name value nx ex 1
+			// idea 确保一个命令内把值和过期时间一起设置，保证原子性，也可以使用lua脚本
 			String result = this.localJedis.get().set(field, checkAndGenerate(), SetParams.setParams().nx().ex(expire));
 			// 设置成功
 			if("OK".equals(result)) {
@@ -85,22 +86,26 @@ public class RedisLock {
 			Thread.yield();
 		}
 	}
+	
+	
+	public void increment() {
+		Jedis jedis = this.localJedis.get();
+		jedis.incrBy("shared", 1);
+	}
 
 	public void unlock() {
 		String uuid = checkAndGenerate();
 
 		Jedis jedis = localJedis.get();
 		if(jedis == null) {
-			jedis = new Jedis(host, port);
-			// init jedis
-			localJedis.set(jedis);
+			System.out.println("error occur null local jedis...");
 		}
 
 		// 检查锁是否存在
 		String field = LOCK_PREFIX + this.name;
 		String exists = this.localJedis.get().get(field);
 		if(!uuid.equals(exists)) {
-			throw new RuntimeException("no lock is exists...");
+			throw new RuntimeException("no lock is exists... uuid: " + uuid + ", exists: " + exists);
 		}
 		
 		this.localJedis.get().del(field);
